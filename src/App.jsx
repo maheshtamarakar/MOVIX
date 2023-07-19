@@ -18,24 +18,34 @@ function App() {
 
   useEffect(() => {
     // invoke function when page loads
-    apiTesting()
+    fetchApiConfig()
   }, [])
+
   // redux devtools is chrome extension for testing redux store
-  const apiTesting = () => {
-    fetchDataFromApi("/movie/popular").then((res) => {
-      console.log(res);
-      dispatch(getApiConfiguration(res))
+  const fetchApiConfig = () => {
+    fetchDataFromApi("/configuration").then((res) => {
+      const url = {
+        backdrop: res.images.secure_base_url + 
+        "original",
+        poster: res.images.secure_base_url + 
+        "original",
+        profile: res.images.secure_base_url + 
+        "original",
+      }
+      dispatch(getApiConfiguration(url))
     })
   }
   return (
     <BrowserRouter>
+    <Header/>
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/:mediaType/:id" element={<Details/>} />
       <Route path="/search/:query" element={<SearchResult/>} />
       <Route path="/explore/:mediaType" element={<Explore/>} />
-      <Route path="*" element={<PageNotFound/>} />
+      <Route path="*" element={<PageNotFound/>} /> 
     </Routes>
+    <Footer/>
     </BrowserRouter>
   )
 }
